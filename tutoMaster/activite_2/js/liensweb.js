@@ -49,6 +49,10 @@ document.getElementById("mainFormElt").addEventListener("submit", function (e) {
 
     if(auteur !== "" && titre !== "" && url !== ""){
 
+        if(url.search("http://") === -1 || url.search("http://s") === -1){
+            url = "http://" + url;
+        }
+
         var element = {
             titre: titre,
             url: url,
@@ -93,18 +97,21 @@ function addForm(){
     inputTextTitreElt.style.padding = "5px";
     inputTextTitreElt.style.margin = "5px";
     inputTextTitreElt.id = "inputTextTitreElt";
+    inputTextTitreElt.required = "true";
 
     var inputTextUrlElt = document.createElement("input");
     inputTextUrlElt.placeholder = "Entrer l'url du lien";
     inputTextUrlElt.style.padding = "5px";
     inputTextUrlElt.style.margin = "5px";
     inputTextUrlElt.id = "inputTextUrlElt";
+    inputTextUrlElt.required = "true";
 
     var inputTextAuteurElt = document.createElement("input");
     inputTextAuteurElt.placeholder = "Entrer votre nom";
     inputTextAuteurElt.style.padding = "5px";
     inputTextAuteurElt.style.margin = "5px";
     inputTextAuteurElt.id = "inputTextAuteurElt";
+    inputTextAuteurElt.required = "true";
 
     var inputSubmitElt = document.createElement("button");
     inputSubmitElt.type = "submit";
@@ -142,6 +149,7 @@ function addElement(element, isFirstOrder) {
     linkElt.textContent = element.titre;
     linkElt.style.color = "#428bca";
     linkElt.style.textDecoration = "none";
+    linkElt.target = "_blank";
 
     var titleElt = document.createElement("h2");
     titleElt.style.display = "inline-block";
