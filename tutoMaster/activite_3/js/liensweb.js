@@ -31,8 +31,12 @@ var content = document.getElementById("contenu");
 var mainElt = document.createElement("div");
 mainElt.id = "mainElt";
 content.appendChild(mainElt);
-listeLiens.forEach(function (element) {
-    addElement(element, 0);
+
+ajaxGet("https://oc-jswebsrv.herokuapp.com/api/liens", function (response) {
+    let listeLiens = JSON.parse(response);
+    listeLiens.forEach(function (element) {
+        addElementHTML(element, 0);
+    });
 });
 
 /*** ADD FORM */
@@ -58,9 +62,12 @@ document.getElementById("mainFormElt").addEventListener("submit", function (e) {
             url: url,
             auteur: auteur
         };
-        addElement(element, 1);
 
-        showInfo("Le lien '"+titre+"' à bien été ajouté.", "green");
+        ajaxPost("https://oc-jswebsrv.herokuapp.com/api/lien", element, function (response) {
+            addElementHTML(element, 1);
+            showInfo("Le lien '"+titre+"' à bien été ajouté.", "green");
+        }, true);
+
         setTimeout(function () {
             hideInfo();
             hideForm();
@@ -136,7 +143,7 @@ function addForm(){
     content.insertBefore(buttonAddElt, mainElt);
 }
 
-function addElement(element, isFirstOrder) {
+function addElementHTML(element, isFirstOrder) {
     var mainElt = document.getElementById("mainElt");
 
     var divElt = document.createElement("div");
@@ -205,4 +212,6 @@ function hideInfo(){
     var textInfoElt = document.getElementById("textInfoElt");
     textInfoElt.style.display = "none";
 }
+
+
 
