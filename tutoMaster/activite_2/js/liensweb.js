@@ -25,111 +25,52 @@ var listeLiens = [
 ];
 
 /*** MY PROPOSITION */
+var content = document.getElementById("contenu");
 
-initPageInJS();
+/*** ADD ALL LINK */
+var mainElt = document.createElement("div");
+mainElt.id = "mainElt";
+content.appendChild(mainElt);
+listeLiens.forEach(function (element) {
+    addElement(element, 0);
+});
 
-function initPageInJS(){
-    var content = document.getElementById("contenu");
+/*** ADD FORM */
+addForm();
 
-    /*** ADD ALL LINK */
-    var mainElt = document.createElement("div");
-    mainElt.id = "main_elt";
+/*** Listeners */
+document.getElementById("mainFormElt").addEventListener("submit", function (e) {
 
-    listeLiens.forEach(function (element) {
-        var content = document.getElementById("contenu");
+    var auteur = mainFormElt.elements.inputTextAuteurElt.value;
+    var titre = mainFormElt.elements.inputTextTitreElt.value;
+    var url = mainFormElt.elements.inputTextUrlElt.value;
 
-        var divElt = document.createElement("div");
-        divElt.style.backgroundColor = "white";
-        divElt.style.padding = "5px";
-        divElt.style.margin = "5px";
+    console.log("Titre " + titre + ", Auteur " + auteur + " URL " + url);
 
-        var linkElt = document.createElement("a");
-        linkElt.href = element.url;
-        linkElt.textContent = element.titre;
-        linkElt.style.color = "#428bca";
-        linkElt.style.textDecoration = "none";
+    if(auteur !== "" && titre !== "" && url !== ""){
 
-        var titleElt = document.createElement("h2");
-        titleElt.style.display = "inline-block";
-        titleElt.style.paddingRight = "5px";
+        var element = {
+            titre: titre,
+            url: url,
+            auteur: auteur
+        };
+        addElement(element, 1);
 
-        titleElt.appendChild(linkElt);
+        showInfo("Le lien '"+titre+"' à bien été ajouté.", "green");
+        setTimeout(function () {
+            hideInfo();
+            hideForm();
+        }, 2000);
 
-        var urlElt = document.createElement("p");
-        urlElt.textContent = element.url;
-        urlElt.style.display = "inline-block";
+    }else{
+        showInfo("La saisie des champs Titre, URL et Auteur du lien est obligatoire.", "red");
+        setTimeout(function () {
+            hideInfo();
+        }, 2000);
+    }
 
-        var textElt = document.createElement("p");
-        textElt.textContent = "Ajouté par " + element.auteur;
-
-        divElt.appendChild(titleElt);
-        divElt.appendChild(urlElt);
-        divElt.appendChild(textElt);
-
-        mainElt.appendChild(divElt);
-        content.appendChild(mainElt);
-    });
-
-    /*** ADD FORM */
-    addForm();
-
-    /*** Listeners */
-    document.getElementById("mainFormElt").addEventListener("submit", function (e) {
-
-        var auteur = mainFormElt.elements.inputTextAuteurElt.value;
-        var titre = mainFormElt.elements.inputTextTitreElt.value;
-        var url = mainFormElt.elements.inputTextUrlElt.value;
-
-        console.log("Titre " + titre + ", Auteur " + auteur + " URL " + url);
-
-        if(auteur !== "" && titre !== "" && url !== ""){
-
-
-
-            showInfo("Le lien '"+titre+"' à bien été ajouté.", "green");
-            setTimeout(function () {
-                hideForm();
-            }, 2000);
-
-        }else{
-            showInfo("Le titre, auteur et url sont obligatoires.", "red");
-            setTimeout(function () {
-                hideInfo();
-            }, 2000);
-        }
-
-        e.preventDefault();
-    });
-
-}
-
-function showForm(){
-    var mainFormElt = document.getElementById("mainFormElt");
-    mainFormElt.style.display = "block";
-
-    var buttonAddElt = document.getElementById("buttonAddElt");
-    buttonAddElt.style.display = "none";
-}
-
-function hideForm(){
-    var mainFormElt = document.getElementById("mainFormElt");
-    mainFormElt.style.display = "none";
-
-    var buttonAddElt = document.getElementById("buttonAddElt");
-    buttonAddElt.style.display = "block";
-}
-
-function showInfo(content, color){
-    var textInfoElt = document.getElementById("textInfoElt");
-    textInfoElt.style.display = "block";
-    textInfoElt.style.backgroundColor = color;
-    textInfoElt.textContent = content;
-}
-
-function hideInfo(){
-    var textInfoElt = document.getElementById("textInfoElt");
-    textInfoElt.style.display = "none";
-}
+    e.preventDefault();
+});
 
 function addForm(){
     var content = document.getElementById("contenu");
@@ -186,5 +127,74 @@ function addForm(){
     buttonAddElt.textContent = "Ajouter un lien";
     buttonAddElt.addEventListener("click", showForm);
     content.insertBefore(buttonAddElt, mainElt);
+}
+
+function addElement(element, isFirstOrder) {
+    var mainElt = document.getElementById("mainElt");
+
+    var divElt = document.createElement("div");
+    divElt.style.backgroundColor = "white";
+    divElt.style.padding = "5px";
+    divElt.style.margin = "5px";
+
+    var linkElt = document.createElement("a");
+    linkElt.href = element.url;
+    linkElt.textContent = element.titre;
+    linkElt.style.color = "#428bca";
+    linkElt.style.textDecoration = "none";
+
+    var titleElt = document.createElement("h2");
+    titleElt.style.display = "inline-block";
+    titleElt.style.paddingRight = "5px";
+
+    titleElt.appendChild(linkElt);
+
+    var urlElt = document.createElement("p");
+    urlElt.textContent = element.url;
+    urlElt.style.display = "inline-block";
+
+    var textElt = document.createElement("p");
+    textElt.textContent = "Ajouté par " + element.auteur;
+
+    divElt.appendChild(titleElt);
+    divElt.appendChild(urlElt);
+    divElt.appendChild(textElt);
+
+    if(isFirstOrder){
+        mainElt.insertBefore(divElt, mainElt.firstChild);
+    }else{
+        mainElt.appendChild(divElt);
+    }
+}
+
+function showForm(){
+    var mainFormElt = document.getElementById("mainFormElt");
+    mainFormElt.style.display = "block";
+
+    var buttonAddElt = document.getElementById("buttonAddElt");
+    buttonAddElt.style.display = "none";
+}
+
+function hideForm(){
+    var mainFormElt = document.getElementById("mainFormElt");
+    mainFormElt.style.display = "none";
+    mainFormElt.elements.inputTextAuteurElt.value = "";
+    mainFormElt.elements.inputTextTitreElt.value = "";
+    mainFormElt.elements.inputTextUrlElt.value = "";
+
+    var buttonAddElt = document.getElementById("buttonAddElt");
+    buttonAddElt.style.display = "block";
+}
+
+function showInfo(content, color){
+    var textInfoElt = document.getElementById("textInfoElt");
+    textInfoElt.style.display = "block";
+    textInfoElt.style.backgroundColor = color;
+    textInfoElt.textContent = content;
+}
+
+function hideInfo(){
+    var textInfoElt = document.getElementById("textInfoElt");
+    textInfoElt.style.display = "none";
 }
 
